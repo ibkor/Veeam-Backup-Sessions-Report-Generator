@@ -1,7 +1,7 @@
 # Veeam-Backup-Sessions-Report
 
 Overview
-This PowerShell script generates a detailed report of backup sessions for a specified job and VM using Veeam Backup and Replication cmdlets. It uses VM Name instead of vmID to gather data such as job name, VM name, job type, start time, average speed, duration, processed data, transferred data, result status, and provides a summary of total sessions, successful sessions, warnings, and failures.
+This PowerShell script generates a detailed report of backup sessions for a specified job and VM using Veeam Backup and Replication cmdlets. It uses VM Name instead of vmID to gather data and provides historical data such as a summary of total sessions, successful sessions, warnings, and failures.
 
 Prerequisites
   - PowerShell 5.0 or higher.

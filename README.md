@@ -17,3 +17,5 @@ Input Prompts
 
 Output
   - The output will be saved to specified `$txtFilePath` location. By default, it is  "C:\temp\VMHistoryReport.txt" 
+
+Disclaimer: The scripts in this repository are provided "as is" without any warranties, express or implied. The author is not liable for any damages resulting from the use or inability to use these scripts, including but not limited to direct, indirect, incidental, or consequential damages. Users accept full responsibility for any risks associated with using these scripts, including compliance with laws and regulations. By using these scripts, you agree to indemnify the author against any claims arising from your use.

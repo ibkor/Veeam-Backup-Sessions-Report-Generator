@@ -19,9 +19,11 @@ Usage
   - Run the script in PowerShell on Veeam Backup & Replication Server.
   - Format of Hostnames.txt is as below without any special characters:
 
-    `VMName1
-     VMName2
-     VMName3
+    `VMName1`
+    
+     `VMName2`
+
+     `VMName3
      .
      .`
 

@@ -4,7 +4,9 @@ Overview
 These PowerShell scripts generates a detailed report of backup sessions for a specified VM using Veeam Backup and Replication cmdlets. It uses VM Name instead of vmID to gather data and provides historical data such as a summary of total sessions, successful sessions, warnings, and failures. If backup sessions from a specific job required, make the switch in the script. Enable two lines with the comment "#To be used only if a specific job required"
 
 VMHistoryReport.ps1: prompts for a VM Name and generates txt file report for this specific VM.
+
 VMHistoryReporttocsv.ps1: prompts for a VM Name and generates csv file report for this specific VM.
+
 VMHistoryReportforMultipleVMs.ps1: reads Hostnames.txt file and generates csv reports for all the VMs in the file. 
 
 Prerequisites

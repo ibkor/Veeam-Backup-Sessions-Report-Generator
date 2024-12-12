@@ -13,7 +13,7 @@ Usage
   - Run the script in PowerShell on Veeam Backup & Replication Server.
 
 Input Prompts
-  - The script will prompt you to enter the job name and the VM name.
+  - The script will prompt you to enter the VM name (and job name if enabled).
 
 Output
   - The output will be saved to specified `$txtFilePath` location. By default, it is  "C:\temp\VMHistoryReport.txt" 

@@ -1,11 +1,16 @@
 ﻿$txtFilePath = "C:\temp\VMHistoryReport.txt" #Path to save the output
 
-$jobNameInput = Read-Host -Prompt "Please enter the Job name"
+#To be used only if a specific job required
+#$jobNameInput = Read-Host -Prompt "Please enter the Job name"
+
 $vmNameInput = Read-Host -Prompt "Please enter the VM name"
 
-# Retrieve the job and corresponding sessions
-$job = Get-VBRJob -Name $jobNameInput
-$sessions = Get-VBRBackupSession | Where-Object {$_.jobId -eq $job.Id.Guid} | Sort-Object EndTimeUTC -Descending | Get-VBRTaskSession -Name $vmNameInput
+# Retrieve the job and corresponding sessions, if a specific job required
+#$job = Get-VBRJob -Name $jobNameInput
+#$sessions = Get-VBRBackupSession | Where-Object {$_.jobId -eq $job.Id.Guid} | Sort-Object EndTimeUTC -Descending | Get-VBRTaskSession -Name $vmNameInput
+
+#all backup sessions for this specific VMs
+$sessions = Get-VBRBackupSession | Sort-Object EndTimeUTC -Descending | Get-VBRTaskSession -Name $vmNameInput
 
 $sessionData = @()
 $successCount = 0

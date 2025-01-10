@@ -1,4 +1,5 @@
-﻿$csvDirectoryPath = "C:\temp\VMHistoryReport\" # Path to save the output. Only the folder this time as script will create several csv files for each VM in the hostnames file.
+# This project is licensed under the MIT License - see the LICENSE file for details.
+ $csvDirectoryPath = "C:\temp\VMHistoryReport\" # Path to save the output. Only the folder this time as script will create several csv files for each VM in the hostnames file.
 $HostnamesFilePath = "C:\temp\Hostnames.txt" # Path to the text file containing VM names. The format, each line will contain the VM name without any special character
 
 # Read VM names from the text file

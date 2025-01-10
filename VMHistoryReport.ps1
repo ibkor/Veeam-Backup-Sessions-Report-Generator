@@ -1,4 +1,5 @@
-﻿$txtFilePath = "C:\temp\VMHistoryReport.txt" #Path to save the output
+# This project is licensed under the MIT License - see the LICENSE file for details.
+ $txtFilePath = "C:\temp\VMHistoryReport.txt" #Path to save the output
 
 #To be used only if a specific job required
 #$jobNameInput = Read-Host -Prompt "Please enter the Job name"

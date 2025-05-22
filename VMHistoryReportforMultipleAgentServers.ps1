@@ -1,4 +1,6 @@
-﻿$csvDirectoryPath = "C:\temp\VMHistoryReport\" # Path to save the output. Only the folder this time as script will create several csv files for each VM in the hostnames file.
+$creds = Get-Credential
+Connect-VBRServer -Credential $creds -Server "Your VBR Server Name"
+$csvDirectoryPath = "C:\temp\VMHistoryReport\" # Path to save the output. Only the folder this time as script will create several csv files for each VM in the hostnames file.
 $HostnamesFilePath = "C:\temp\Hostnames.txt" # Path to the text file containing VM names. The format, every line will contain the VM name without any other character
 
 # Read VM names from the text file

@@ -13,6 +13,8 @@ VMHistoryReporttocsv.ps1: prompts for a VM Name and generates csv file report fo
 
 VMHistoryReportforMultipleVMs.ps1: reads Hostnames.txt file and generates csv reports for all the VMs in the file. 
 
+VMHistoryReportforMultipleAgentServers.ps1: reads Hostnames.txt file and generates csv reports for all the agent servers in the file. 
+
 Prerequisites
   - PowerShell 5.0 or higher.
   - Veeam Backup & Replication installed with access to the Veeam PowerShell module.

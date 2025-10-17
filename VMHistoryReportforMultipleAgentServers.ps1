@@ -28,7 +28,8 @@ foreach ($vmNameInput in $vmNames) {
         $avgSpeed = "{0:N1} MB/s" -f ($session.Progress.AvgSpeed / 1MB)
 
         $type = if ($session.IsFullMode) { "Full" } else { "Incremental" }
-
+        if ($session.JobSess.Name -like "*Synthetic*") {$type = "Synthetic Full" }
+  
         $result = $session.Status
 
         $totalCount++
@@ -80,3 +81,4 @@ foreach ($vmNameInput in $vmNames) {
 }
 
 Read-Host -Prompt "Press Enter to exit"
+

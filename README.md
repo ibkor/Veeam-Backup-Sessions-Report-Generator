@@ -11,7 +11,7 @@ HistoryReportforAllVMs.ps1: creates historical report for all VMs within specifi
 
 HistoryReportforAllAgentServers.ps1: creates historical report for all agent servers within specified time frame. Default: Last Month. 
 
-HistoryReportforMultipleAgents.ps1: reads Hostnames.txt file and generates csv reports for all the Agent Servers in the file. 
+HistoryReportforMultipleAgentServers.ps1: reads Hostnames.txt file and generates csv reports for all the Agent Servers in the file. 
 
 HistoryReportforMultipleVMs.ps1: reads Hostnames.txt file and generates csv reports for all the VMs in the file. 
 

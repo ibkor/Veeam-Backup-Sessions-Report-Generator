@@ -4,16 +4,16 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 # Veeam-Backup-Sessions-Report
 
-Overview
-These PowerShell scripts generates a detailed report of backup sessions for a specified VM using Veeam Backup and Replication cmdlets. It uses VM Name instead of vmID to gather data and provides historical data such as a summary of total sessions, successful sessions, warnings, and failures. If backup sessions from a specific job required, make the switch in the script. Enable two lines with the comment "#To be used only if a specific job required"
+#Overview
+These PowerShell scripts generates a detailed report of backup sessions for a specified VM using Veeam Backup and Replication cmdlets. It uses VM / Agent Server Name instead of ID to gather data and provides historical data such as a summary of total sessions, successful sessions, warnings, and failures. If backup sessions from a specific job required, make the switch in the script. Enable two lines with the comment "#To be used only if a specific job required"
 
-VMHistoryReport.ps1: prompts for a VM Name and generates txt file report for this specific VM.
+HistoryReportforAllVMs.ps1: creates historical report for all VMs within specified time frame. Default: Last Month. 
 
-VMHistoryReporttocsv.ps1: prompts for a VM Name and generates csv file report for this specific VM.
+HistoryReportforAllAgentServers.ps1: creates historical report for all agent servers within specified time frame. Default: Last Month. 
 
-VMHistoryReportforMultipleVMs.ps1: reads Hostnames.txt file and generates csv reports for all the VMs in the file. 
+HistoryReportforMultipleAgents.ps1: reads Hostnames.txt file and generates csv reports for all the Agent Servers in the file. 
 
-VMHistoryReportforMultipleAgentServers.ps1: reads Hostnames.txt file and generates csv reports for all the agent servers in the file. 
+HistoryReportforMultipleVMs.ps1: reads Hostnames.txt file and generates csv reports for all the VMs in the file. 
 
 Prerequisites
   - PowerShell 5.0 or higher.
@@ -32,9 +32,6 @@ Usage
      `VMName3
      .
      .`
-
-Input Prompts
-  - The script will prompt you to enter the VM name (and job name if enabled).
 
 Output
   - The output will be saved to specified `$txtFilePath` location. By default, it is  "C:\temp\VMHistoryReport.txt" 

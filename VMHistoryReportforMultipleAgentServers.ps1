@@ -1,84 +1,57 @@
 $creds = Get-Credential
 Connect-VBRServer -Credential $creds -Server "Your VBR Server Name"
-$csvDirectoryPath = "C:\temp\VMHistoryReport\" # Path to save the output. Only the folder this time as script will create several csv files for each VM in the hostnames file.
-$HostnamesFilePath = "C:\temp\Hostnames.txt" # Path to the text file containing VM names. The format, every line will contain the VM name without any other character
 
-# Read VM names from the text file
-$vmNames = Get-Content -Path $HostnamesFilePath
+$csvDirectoryPath = "C:\temp\VMHistoryReport\" # Output folder
 
-foreach ($vmNameInput in $vmNames) {
-    # All backup sessions for this specific VM
-    $sessions = Get-VBRBackupSession | Sort-Object EndTimeUTC -Descending | Get-VBRTaskSession -Name $vmNameInput
+$oneMonthAgo = (Get-Date).AddMonths(-1)
 
-    $sessionData = @()
-    $successCount = 0
-    $warningCount = 0
-    $failedCount = 0
-    $totalCount = 0
+# Get all backup sessions from the last month
+$allSessions = Get-VBRComputerBackupJobSession | Where-Object { $_.EndTime -ge $oneMonthAgo } | Sort-Object EndTimeUTC -Descending
+Get-VBRComputerBackupJobSession | Where-Object { $_.EndTime -ge $oneMonthAgo } | Sort-Object EndTimeUTC -Descending
+ 
+# Get all unique VM names from those sessions
+$allVMNames = $allSessions | Get-VBRTaskSession | Select-Object -ExpandProperty Name | Sort-Object -Unique
+
+# Prepare an array to hold all session details
+$allSessionData = @()
+
+$sessions = $allSessions | Get-VBRTaskSession -Name $allVMNames
+
+foreach ($vmNameInput in $allVMNames) {
+    # All backup task sessions for this specific VM from the last month
+    $sessions = $allSessions | Get-VBRTaskSession -Name $vmNameInput
 
     foreach ($session in $sessions) {
         $jobname = $session.JobName
         $vmname = $session.Name 
-
         $duration = $session.Progress.Duration
-        $starttime = $session.Progress.StartTimeLocal    
-
-        $processeddata = "{0:N2} GB" -f ($session.Progress.ProcessedSize / 1GB)
-        $transferreddata = "{0:N2} GB" -f ($session.Progress.TransferedSize / 1GB)
-        $avgSpeed = "{0:N1} MB/s" -f ($session.Progress.AvgSpeed / 1MB)
-
+        $starttime = $session.Progress.StartTimeLocal   
+        $endtime = $session.Progress.StopTimeLocal       
+        $transferreddata = "{0:N2} GB" -f ($session.Progress.TransferedSize / 1GB)       
         $type = if ($session.IsFullMode) { "Full" } else { "Incremental" }
-        if ($session.JobSess.Name -like "*Synthetic*") {$type = "Synthetic Full" }
-  
+        if ($session.JobSess.Name -like "*Synthetic*") { $type = "Synthetic Full" }
         $result = $session.Status
-
-        $totalCount++
-        if ($result -eq "Success") {
-            $successCount++
-        }
-        if ($result -eq "Warning") {
-            $warningCount++
-            $successCount++  
-        }
-        if ($result -eq "Failed") {
-            $failedCount++
-        }
 
         $sessionDetails = [PSCustomObject]@{
             "Job Name"          = $jobname
-            "VM Name"           = $vmname
-            "Job Type"          = $type
-            "Start Time"        = $starttime        
-            "Duration"          = $duration
-            "Average Speed"     = $avgSpeed
-            "Processed Data"    = $processeddata
+            "Server Name"       = $vmname
+            "Backup Type"       = $type
+            "Start Time"        = $starttime   
+            "End Time"          = $endtime
+            "Duration"          = $duration              
             "Transferred Data"  = $transferreddata
             "Result"            = $result
         }
 
-        $sessionData += $sessionDetails
+        $allSessionData += $sessionDetails
     }
-
-    $successRate = if ($totalCount -gt 0) { 
-        "{0:P2}" -f ($successCount / $totalCount) 
-    } else { 
-        "N/A" 
-    }
-
-    # Define the CSV file path for the specific VM
-    $csvFilePath = Join-Path -Path $csvDirectoryPath -ChildPath ("VMHistoryReport_" + $vmNameInput + ".csv")
-
-    # Export the session data to a CSV file
-    $sessionData | Export-Csv -Path $csvFilePath -NoTypeInformation -Force -Delimiter ';'
-
-    Write-Host "Backup session details for VM '$vmNameInput' have been saved to $csvFilePath"
-
-    Write-Host "`nTotal Sessions for '$vmNameInput': $totalCount"
-    Write-Host "Successful: $($successCount - $warningCount)"
-    Write-Host "Warning: $warningCount"
-    Write-Host "Failed: $failedCount"
-    Write-Host "Success Rate: $successRate"
 }
 
-Read-Host -Prompt "Press Enter to exit"
+# Define the CSV file path for the combined report
+$csvFilePath = Join-Path -Path $csvDirectoryPath -ChildPath "VMHistoryReport_AllAgents.csv"
 
+# Export the combined session data to a single CSV file
+$allSessionData | Export-Csv -Path $csvFilePath -NoTypeInformation -Force -Delimiter ';'
+
+Write-Host "Combined backup session details for all agent servers have been saved to $csvFilePath"
+Read-Host -Prompt "Press Enter to exit" 

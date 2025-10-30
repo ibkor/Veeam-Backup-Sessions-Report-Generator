@@ -2,7 +2,7 @@ $creds = Get-Credential
 Connect-VBRServer -Credential $creds -Server "Your VBR Server Name"
 $csvDirectoryPath = "C:\temp\VMHistoryReport\"
 $oneMonthAgo = (Get-Date).AddMonths(-1)
-Get-VBRComputerBackupJobSession
+
 # Get all relevant backup sessions and all their task sessions
 $allSessions = Get-VBRComputerBackupJobSession | Where-Object { $_.EndTime -ge $oneMonthAgo }
 $allTaskSessions = $allSessions | Get-VBRTaskSession
@@ -40,4 +40,5 @@ $allSessionData | Export-Csv -Path $csvFilePath -NoTypeInformation -Force -Delim
 Write-Host "Combined backup session details for all VMs have been saved to $csvFilePath"
 
 Read-Host -Prompt "Press Enter to exit"
+
 

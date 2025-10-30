@@ -16,7 +16,6 @@ $allSessionData = $allTaskSessions | ForEach-Object {
     $starttime = $session.Progress.StartTimeLocal
     $endtime = $session.Progress.StopTimeLocal
     $transferedBytes = $session.Progress.TransferedSize
-    if (-not $transferedBytes) { $transferedBytes = 0 }
     $transferredFormatted = "{0:N2} GB" -f ($transferedBytes / 1GB)
     $type = if ($session.IsFullMode) { "Full" } else { "Incremental" }
     if ($session.JobSess.Name -like "*Synthetic*") { $type = "Synthetic Full" }
@@ -39,4 +38,5 @@ $allSessionData = $allTaskSessions | ForEach-Object {
 $csvFilePath = Join-Path -Path $csvDirectoryPath -ChildPath "VMHistoryReport_AllVMs.csv"
 $allSessionData | Export-Csv -Path $csvFilePath -NoTypeInformation -Force -Delimiter ';'
 Write-Host "Combined backup session details for all VMs have been saved to $csvFilePath"
+
 Read-Host -Prompt "Press Enter to exit"

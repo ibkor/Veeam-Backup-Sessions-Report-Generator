@@ -35,8 +35,9 @@ $allSessionData = $allTaskSessions | ForEach-Object {
 }
 
 # Export to CSV
-$csvFilePath = Join-Path -Path $csvDirectoryPath -ChildPath "VMHistoryReport_AllVMs.csv"
+$csvFilePath = Join-Path -Path $csvDirectoryPath -ChildPath "VMHistoryReport_AllAgentss.csv"
 $allSessionData | Export-Csv -Path $csvFilePath -NoTypeInformation -Force -Delimiter ';'
 Write-Host "Combined backup session details for all VMs have been saved to $csvFilePath"
 
 Read-Host -Prompt "Press Enter to exit"
+

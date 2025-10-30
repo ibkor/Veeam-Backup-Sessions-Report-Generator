@@ -1,5 +1,5 @@
-﻿#$creds = Get-Credential
-#Connect-VBRServer -Credential $creds -Server "Your VBR Server Name"
+$creds = Get-Credential
+Connect-VBRServer -Credential $creds -Server "Your VBR Server Name"
 $csvDirectoryPath = "C:\temp\VMHistoryReport\"
 $oneMonthAgo = (Get-Date).AddMonths(-1)
 Get-VBRComputerBackupJobSession
@@ -26,8 +26,8 @@ $allSessionData = $allTaskSessions | ForEach-Object {
         "Job Name"          = $jobname
         "VM Name"           = $vmname
         "Backup Type"       = $type
-        "Start Time"        = $starttime     
-        "End Time"          = $endtime
+        "Start Time"        = $starttime -replace ' ', '-'    
+        "End Time"          = $endtime -replace ' ', '-' 
         "Duration"          = $duration
         "Transferred Data"  = $transferredFormatted
         "Result"            = $result
@@ -35,7 +35,7 @@ $allSessionData = $allTaskSessions | ForEach-Object {
 }
 
 # Export to CSV
-$csvFilePath = Join-Path -Path $csvDirectoryPath -ChildPath "VMHistoryReport_AllAgentss.csv"
+$csvFilePath = Join-Path -Path $csvDirectoryPath -ChildPath "VMHistoryReport_AllAgents.csv"
 $allSessionData | Export-Csv -Path $csvFilePath -NoTypeInformation -Force -Delimiter ';'
 Write-Host "Combined backup session details for all VMs have been saved to $csvFilePath"
 

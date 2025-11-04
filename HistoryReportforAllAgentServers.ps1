@@ -1,4 +1,4 @@
-$creds = Get-Credential
+ $creds = Get-Credential
 Connect-VBRServer -Credential $creds -Server "Your VBR Server Name"
 $csvDirectoryPath = "C:\temp\VMHistoryReport\"
 $oneMonthAgo = (Get-Date).AddMonths(-1)
@@ -21,13 +21,20 @@ $allSessionData = $allTaskSessions | ForEach-Object {
     if ($session.JobSess.Name -like "*Synthetic*") { $type = "Synthetic Full" }
     $result = $session.Status
     
-
+   if ($jobname -like '*SOLARIS*' -or $jobname -like '*AIX*') {
+    $backup = Get-VBRBackup -Name $jobname
+    $RPs = Get-VBRRestorePoint -Backup $backup -Name $vmname | Where-Object {$_.CreationTime.ToString('yyyy/MM/dd') -eq $starttime.ToString('yyyy/MM/dd')}
+         if ($RPs.Type -ilike '*Full*') {
+        $type = "Full"
+         }
+   }
+        \
     [PSCustomObject]@{
         "Job Name"          = $jobname
         "VM Name"           = $vmname
         "Backup Type"       = $type
-        "Start Time"        = $starttime -replace ' ', '-'    
-        "End Time"          = $endtime -replace ' ', '-' 
+        "Start Time"        = $starttime   
+        "End Time"          = $endtime 
         "Duration"          = $duration
         "Transferred Data"  = $transferredFormatted
         "Result"            = $result
@@ -41,4 +48,4 @@ Write-Host "Combined backup session details for all VMs have been saved to $csvF
 
 Read-Host -Prompt "Press Enter to exit"
 
-
+ 

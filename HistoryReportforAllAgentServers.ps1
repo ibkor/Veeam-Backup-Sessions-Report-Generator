@@ -46,7 +46,7 @@ $allSessionData = foreach ($session in $allTaskSessions) {
         "Start Time"        = $starttime   
         "End Time"          = $endtime 
         "Duration"          = $duration
-        "Transferred Data"  = $transferredFormatted
+        "Transferred Data GB"  = $transferredFormatted
         "Result"            = $result
     }
 }
@@ -56,3 +56,4 @@ $csvFilePath = Join-Path -Path $csvDirectoryPath -ChildPath "VMHistoryReport_All
 $allSessionData | Export-Csv -Path $csvFilePath -NoTypeInformation -Force -Delimiter ';'
 Write-Host "Combined backup session details for all VMs have been saved to $csvFilePath"
 Read-Host -Prompt "Press Enter to exit"
+

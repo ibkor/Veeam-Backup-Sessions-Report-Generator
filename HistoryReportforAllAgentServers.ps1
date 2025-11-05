@@ -33,7 +33,7 @@ $allSessionData = foreach ($session in $allTaskSessions) {
             $RPs = Get-VBRRestorePoint -Backup $backups[$jobname] -Name $vmname | Where-Object {
                 $_.CreationTime.Date -eq $starttime.Date
             }
-            if ($RPs.Type -ilike '*Full*') {
+            if ($RPs.Type -ilike '*Full*' -or $RPs.Algorithm -ilike "*Full*") {
                 $type = "Full"
             }
         }
@@ -56,4 +56,5 @@ $csvFilePath = Join-Path -Path $csvDirectoryPath -ChildPath "VMHistoryReport_All
 $allSessionData | Export-Csv -Path $csvFilePath -NoTypeInformation -Force -Delimiter ';'
 Write-Host "Combined backup session details for all VMs have been saved to $csvFilePath"
 Read-Host -Prompt "Press Enter to exit"
+
 

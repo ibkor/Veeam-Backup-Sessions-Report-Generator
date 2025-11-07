@@ -1,11 +1,11 @@
-$creds = Get-Credential
+ $creds = Get-Credential
 Connect-VBRServer -Credential $creds -Server "Your VBR Server Name"
 $csvDirectoryPath = "C:\temp\VMHistoryReport\"
 $oneMonthAgo = (Get-Date).AddMonths(-1)
 
 # Get all relevant backup sessions and their task sessions up front
-$allSessions = Get-VBRComputerBackupJobSession | Where-Object { $_.EndTime -ge $oneMonthAgo }
-$allTaskSessions = $allSessions | Get-VBRTaskSession
+$allSessions = Get-VBRBackupSession | Where-Object { $_.EndTime -ge $oneMonthAgo }
+$allTaskSessions = $allSessions | Get-VBRTaskSession 
 
 # Pre-fetch all backups and restore points for special job types
 $specialJobNames = $allTaskSessions | Where-Object { $_.JobName -like '*SOLARIS*' -or $_.JobName -like '*AIX*' } | Select-Object -ExpandProperty JobName -Unique
@@ -15,8 +15,17 @@ foreach ($job in $specialJobNames) {
     if ($backup) { $backups[$job] = $backup }
 }
 
+$restorePointsByJobAndVM = @{}
+foreach ($job in $specialJobNames) {
+    if ($backups.ContainsKey($job)) {
+        $allRPs = Get-VBRRestorePoint -Backup $backups[$job]
+        # Organize restore points by VM name for quick lookup
+        $restorePointsByJobAndVM[$job] = $allRPs | Group-Object -Property Name
+    }
+}
+
 $allSessionData = foreach ($session in $allTaskSessions) {
-    $jobname = $session.JobName
+    $jobname = $session.JobName 
     $vmname = $session.Name
     $duration = $session.Progress.Duration
     $starttime = $session.Progress.StartTimeLocal
@@ -29,12 +38,16 @@ $allSessionData = foreach ($session in $allTaskSessions) {
 
     # Only fetch restore points if necessary
     if ($jobname -like '*SOLARIS*' -or $jobname -like '*AIX*') {
-        if ($backups.ContainsKey($jobname)) {
-            $RPs = Get-VBRRestorePoint -Backup $backups[$jobname] -Name $vmname | Where-Object {
-                $_.CreationTime.Date -eq $starttime.Date
-            }
-            if ($RPs.Type -ilike '*Full*' -or $RPs.Algorithm -ilike "*Full*") {
+        if ($restorePointsByJobAndVM.ContainsKey($jobname)) {
+            # Find the correct group for this VM
+            $vmGroup = $restorePointsByJobAndVM[$jobname] | Where-Object { $_.Name -eq $vmname }
+            if ($vmGroup) {
+                $RPs = $vmGroup.Group | Where-Object { $_.CreationTime.Date -eq $starttime.Date }
+                $latestFullRP = $RPs | Where-Object { $_.Type -ilike '*Full*' -or $_.Algorithm -ilike "*Full*" } | Sort-Object CreationTime -Descending | Select-Object -First 1
+
+            if ($latestFullRP -and $starttime.Date -eq $latestFullRP.CreationTime.Date) {
                 $type = "Full"
+                }
             }
         }
     }
@@ -57,4 +70,4 @@ $allSessionData | Export-Csv -Path $csvFilePath -NoTypeInformation -Force -Delim
 Write-Host "Combined backup session details for all VMs have been saved to $csvFilePath"
 Read-Host -Prompt "Press Enter to exit"
 
-
+ 

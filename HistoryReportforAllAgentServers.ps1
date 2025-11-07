@@ -4,7 +4,7 @@ $csvDirectoryPath = "C:\temp\VMHistoryReport\"
 $oneMonthAgo = (Get-Date).AddMonths(-1)
 
 # Get all relevant backup sessions and their task sessions up front
-$allSessions = Get- VBRComputerBackupJobSession | Where-Object { $_.EndTime -ge $oneMonthAgo }
+$allSessions = Get-VBRComputerBackupJobSession | Where-Object { $_.EndTime -ge $oneMonthAgo }
 $allTaskSessions = $allSessions | Get-VBRTaskSession 
 
 # Pre-fetch all backups and restore points for special job types
@@ -71,4 +71,5 @@ Write-Host "Combined backup session details for all VMs have been saved to $csvF
 Read-Host -Prompt "Press Enter to exit"
 
  
+
 

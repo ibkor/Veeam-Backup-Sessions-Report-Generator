@@ -54,7 +54,7 @@ $allSessionData = foreach ($session in $allTaskSessions) {
 
     [PSCustomObject]@{
         "Job Name"          = $jobname
-        "VM Name"           = $vmname
+        "Server Name"       = $vmname
         "Backup Type"       = $type
         "Start Time"        = $starttime   
         "End Time"          = $endtime 
@@ -71,5 +71,6 @@ Write-Host "Combined backup session details for all VMs have been saved to $csvF
 Read-Host -Prompt "Press Enter to exit"
 
  
+
 
 

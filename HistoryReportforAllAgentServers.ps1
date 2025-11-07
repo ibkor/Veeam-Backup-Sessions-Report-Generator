@@ -18,7 +18,7 @@ $csvDirectoryPath = "C:\temp\VMHistoryReport\"
 $oneMonthAgo = (Get-Date).AddMonths(-1)
 
 Write-Log "Getting all relevant backup sessions."
-$allSessions = Get-VBRBackupSession | Where-Object { $_.EndTime -ge $oneMonthAgo }
+$allSessions = Get-VBRComputerBackupJobSession | Where-Object { $_.EndTime -ge $oneMonthAgo }
 Write-Log "$($allSessions.Count) sessions found."
 
 Write-Log "Getting all task sessions."
@@ -103,3 +103,4 @@ Write-Host "Combined backup session details for all VMs have been saved to $csvF
 Write-Log "Script completed successfully." "SUCCESS"
 
 Read-Host -Prompt "Press Enter to exit" 
+
